@@ -64,7 +64,7 @@ const NSTimeInterval BOOLoadMoreControllerSlowAnimatedDuration = 0.4;
     UIEdgeInsets inset = [self scrollContentInset];
     CGFloat scrollHeight = [self scrollViewSize].height;
     CGFloat contentHeight = [self scrollContentSize].height;
-    return MAX(inset.top + contentHeight + inset.bottom, scrollHeight - inset.top);
+    return MAX(contentHeight + inset.bottom, scrollHeight - inset.top);
 }
 
 - (void)finishLoadingWithDelay:(NSTimeInterval)delay {
@@ -161,7 +161,7 @@ const NSTimeInterval BOOLoadMoreControllerSlowAnimatedDuration = 0.4;
     }
     
     CGFloat visiableMaxY = [self scrollViewVisiableAreaMaxY];
-    CGFloat pullUpDistance = (inset.top + offset_y + scrollHeight) - visiableMaxY;
+    CGFloat pullUpDistance = (offset_y + scrollHeight) - visiableMaxY;
     BOOL canLoad = self.loadThreshold < pullUpDistance;
     BOOL isDragging = self.observable.isDragging;
     

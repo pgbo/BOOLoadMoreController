@@ -67,23 +67,23 @@
     CGFloat loadMoreHeight = [self.loadMoreView intrinsicContentSize].height;
     
     self.loadMoreController = [[BOOLoadMoreController alloc] initWithObservable:self.tableView];
-    self.loadMoreController.loadThreshold = loadMoreHeight;
+//    self.loadMoreController.loadThreshold = loadMoreHeight;
     
     // auto load more, set loadThreshold = 0
-//    self.loadMoreController.loadThreshold = 0;
+    self.loadMoreController.loadThreshold = 0;
     
     self.loadMoreController.extraBottomInsetWhenLoading = loadMoreHeight;
     __weak typeof(self)weakSelf = self;
     self.loadMoreController.stateWillChangeBlock = ^(BOOLoadMoreController *controller, BOOLoadMoreControlState current, BOOLoadMoreControlState willState) {
-        if ([weakSelf.loadMoreView respondsToSelector:@selector(stateWillChangeFromCurrent:toState:)]) {
-            [weakSelf.loadMoreView stateWillChangeFromCurrent:current toState:willState];
+        if ([weakSelf.loadMoreView respondsToSelector:@selector(loadMoreStateWillChangeFromCurrent:toState:)]) {
+            [weakSelf.loadMoreView loadMoreStateWillChangeFromCurrent:current toState:willState];
         }
     };
     
     self.loadMoreController.stateDidChangedBlock = ^(BOOLoadMoreController *controller, BOOLoadMoreControlState old, BOOLoadMoreControlState currentState) {
         
-        if ([weakSelf.loadMoreView respondsToSelector:@selector(stateDidChangedFromOld:toCurrentState:)]) {
-            [weakSelf.loadMoreView stateDidChangedFromOld:old toCurrentState:currentState];
+        if ([weakSelf.loadMoreView respondsToSelector:@selector(loadMoreStateDidChangedFromOld:toCurrentState:)]) {
+            [weakSelf.loadMoreView loadMoreStateDidChangedFromOld:old toCurrentState:currentState];
         }
         if (controller.state == BOOLoadMoreControlStateIdle) {
             weakSelf.loadMoreView.frame = CGRectMake(0, controller.scrollViewVisiableAreaMaxY, CGRectGetWidth([UIScreen mainScreen].bounds), loadMoreHeight);
@@ -91,14 +91,14 @@
     };
     
     self.loadMoreController.pullingPercentChangeBlock = ^(BOOLoadMoreController *refreshController, CGFloat pullingPercent){
-        if ([weakSelf.loadMoreView respondsToSelector:@selector(pullingPercentChangeTo:)]) {
-            [weakSelf.loadMoreView pullingPercentChangeTo:pullingPercent];
+        if ([weakSelf.loadMoreView respondsToSelector:@selector(loadMorePullingPercentChangeTo:)]) {
+            [weakSelf.loadMoreView loadMorePullingPercentChangeTo:pullingPercent];
         }
     };
     
     self.loadMoreController.finishLoadAnimationBlock = ^(BOOLoadMoreController *controller){
-        if ([weakSelf.loadMoreView respondsToSelector:@selector(animateWhenFinishRefresh)]) {
-            [weakSelf.loadMoreView animateWhenFinishRefresh];
+        if ([weakSelf.loadMoreView respondsToSelector:@selector(loadMoreAnimateWhenFinishRefresh)]) {
+            [weakSelf.loadMoreView loadMoreAnimateWhenFinishRefresh];
         }
     };
     

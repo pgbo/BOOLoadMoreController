@@ -114,9 +114,9 @@ typedef NS_ENUM(NSUInteger, BOOLoadMoreControlState) {
 
 @optional
 
-- (void)stateWillChangeFromCurrent:(BOOLoadMoreControlState)fromCurrentState toState:(BOOLoadMoreControlState)toState;
-- (void)stateDidChangedFromOld:(BOOLoadMoreControlState)fromOldState toCurrentState:(BOOLoadMoreControlState)toCurrentState;
-- (void)animateWhenFinishRefresh;
-- (void)pullingPercentChangeTo:(CGFloat)pullingPercent;
+- (void)loadMoreStateWillChangeFromCurrent:(BOOLoadMoreControlState)fromCurrentState toState:(BOOLoadMoreControlState)toState;
+- (void)loadMoreStateDidChangedFromOld:(BOOLoadMoreControlState)fromOldState toCurrentState:(BOOLoadMoreControlState)toCurrentState;
+- (void)loadMoreAnimateWhenFinishRefresh;
+- (void)loadMorePullingPercentChangeTo:(CGFloat)pullingPercent;
 
 @end

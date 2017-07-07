@@ -239,7 +239,11 @@ const NSTimeInterval BOOLoadMoreControllerSlowAnimatedDuration = 0.4;
 }
 
 - (void)removeScrollContenOffsetObserver {
-    [self.observable removeObserver:self forKeyPath:BOOLoadMoreControllerKeyPathContentOffset];
+    @try {
+        [self.observable removeObserver:self forKeyPath:BOOLoadMoreControllerKeyPathContentOffset];
+    } @catch (id exception) {
+        //do nothing, obviously it wasn't attached because an exception was thrown
+    }
 }
 
 - (void)addScrollContenSizeObserver {

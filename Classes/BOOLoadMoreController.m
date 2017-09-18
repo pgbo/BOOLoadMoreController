@@ -95,27 +95,28 @@ const NSTimeInterval BOOLoadMoreControllerSlowAnimatedDuration = 0.4;
     
     // recovery inset
     UIEdgeInsets inset = [self scrollContentInset];
+    __weak typeof(self)weakSelf = self;
     [UIView animateWithDuration:BOOLoadMoreControllerSlowAnimatedDuration animations:^{
         UIEdgeInsets newInset = inset;
-        newInset.bottom = self.scrollContentInsetBottomBeforeLoad;
-        self.observable.contentInset = newInset;
+        newInset.bottom = weakSelf.scrollContentInsetBottomBeforeLoad;
+        weakSelf.observable.contentInset = newInset;
         
-        if (self.finishLoadAnimationBlock) {
-            self.finishLoadAnimationBlock(self);
+        if (weakSelf.finishLoadAnimationBlock) {
+            weakSelf.finishLoadAnimationBlock(weakSelf);
         }
         
     } completion:^(BOOL finished) {
-        
-        if (self.state != BOOLoadMoreControlStateIdle) {
-            self.state = BOOLoadMoreControlStateIdle;
+        if (weakSelf) {
+            if (weakSelf.state != BOOLoadMoreControlStateIdle) {
+                weakSelf.state = BOOLoadMoreControlStateIdle;
+            }
+            
+            weakSelf.pullingPercent = 0.0;
+            
+            // add observer again
+            [weakSelf addScrollContenOffsetObserver];
         }
-        
-        self.pullingPercent = 0.0;
-        
-        // add observer again
-        [self addScrollContenOffsetObserver];
     }];
-    
 }
 
 - (void)setState:(BOOLoadMoreControlState)state {
@@ -176,28 +177,31 @@ const NSTimeInterval BOOLoadMoreControllerSlowAnimatedDuration = 0.4;
         self.scrollContentInsetBottomBeforeLoad = inset.bottom;
         
         BOOL needAnimation = (self.extraBottomInsetWhenLoading > 0 || self.placeAtBottomWhenLoading);
+        __weak typeof(self)weakSelf = self;
         [UIView animateWithDuration:needAnimation?BOOLoadMoreControllerFastAnimatedDuration:0 animations:^{
             
-            if (self.extraBottomInsetWhenLoading > 0) {
-                CGFloat newInsetBottom = self.scrollContentInsetBottomBeforeLoad + self.extraBottomInsetWhenLoading;
+            if (weakSelf.extraBottomInsetWhenLoading > 0) {
+                CGFloat newInsetBottom = weakSelf.scrollContentInsetBottomBeforeLoad + weakSelf.extraBottomInsetWhenLoading;
                 UIEdgeInsets newInset = inset;
                 newInset.bottom = newInsetBottom;
-                self.observable.contentInset = newInset;
+                weakSelf.observable.contentInset = newInset;
             }
             
-            if (self.placeAtBottomWhenLoading) {
-                CGPoint newContentOffset = self.observable.contentOffset;
-                newContentOffset.y = (visiableMaxY - scrollHeight) + (self.extraBottomInsetWhenLoading>0?self.extraBottomInsetWhenLoading:0);
-                [self.observable setContentOffset:newContentOffset animated:NO];
+            if (weakSelf.placeAtBottomWhenLoading) {
+                CGPoint newContentOffset = weakSelf.observable.contentOffset;
+                newContentOffset.y = (visiableMaxY - scrollHeight) + (weakSelf.extraBottomInsetWhenLoading>0?weakSelf.extraBottomInsetWhenLoading:0);
+                [weakSelf.observable setContentOffset:newContentOffset animated:NO];
             }
             
         } completion:^(BOOL finished) {
-            if (self.loadMoreExecuteBlock) {
-                self.loadMoreExecuteBlock(self);
+            if (weakSelf) {
+                if (weakSelf.loadMoreExecuteBlock) {
+                    weakSelf.loadMoreExecuteBlock(weakSelf);
+                }
+                
+                // add observer again
+                [weakSelf addScrollContenOffsetObserver];
             }
-            
-            // add observer again
-            [self addScrollContenOffsetObserver];
         }];
         
     } else if (isDragging && canLoad) {

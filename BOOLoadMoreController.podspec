@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                  = 'BOOLoadMoreController'
-    spec.version               = '1.0.3'
+    spec.version               = '1.0.4'
     spec.summary               = 'Decoupled solution for DROP UP TO LOAD MORE'
 
     spec.description           = <<-DESC
